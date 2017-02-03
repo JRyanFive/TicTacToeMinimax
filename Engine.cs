@@ -12,8 +12,8 @@ namespace TicTacToe
 
         public int[] FineBestNode()
         {
-            //var bestNode = Minimax(3, true);
-            var bestNode = MinimaxPrunning(10, true, -1, 1);
+            var bestNode = Minimax(3, true);
+            //var bestNode = MinimaxPrunning(3, true, int.MinValue, int.MaxValue);
 
             return new int[] { bestNode.X, bestNode.Y };
         }
@@ -65,24 +65,25 @@ namespace TicTacToe
                 foreach (var openCell in openCells)
                 {
                     GameBoard.SetMove(openCell[0], openCell[1], maxPlayer ? Cell.MAX : Cell.MIN);
-                    var nextNode = Minimax(depth - 1, !maxPlayer);
+                    var nextNode = MinimaxPrunning(depth - 1, !maxPlayer, alpha, beta);
 
                     if (bestNode == null ||
-                        (maxPlayer && nextNode.Rank > bestNode.Rank) ||
-                        (!maxPlayer && nextNode.Rank < bestNode.Rank))
+                        (maxPlayer && nextNode.Rank > alpha) ||
+                        (!maxPlayer && nextNode.Rank < beta))
                     {
                         bestNode = nextNode;
+
+                        if (maxPlayer)
+                        {
+                            alpha = nextNode.Rank;
+                        }
+                        else
+                        {
+                            beta = nextNode.Rank;
+                        }
+
                         bestNode.X = openCell[0];
                         bestNode.Y = openCell[1];
-                    }
-
-                    if (maxPlayer && nextNode.Rank > alpha)
-                    {
-                        alpha = nextNode.Rank;
-                    }
-                    if (!maxPlayer && nextNode.Rank < beta)
-                    {
-                        beta = nextNode.Rank;
                     }
 
                     GameBoard.SetMove(openCell[0], openCell[1], Cell.OPEN);
@@ -109,7 +110,12 @@ namespace TicTacToe
 
             for (int i = lines.GetLowerBound(0); i <= lines.GetUpperBound(0); i++)
             {
-                score += GetScoreOneLine(new[] { squares[lines[i, 0]][lines[i, 1]], squares[lines[i, 2]][lines[i, 3]], squares[lines[i, 4]][lines[i, 5]] });
+                var linescore = GetScoreOneLine(new[] { squares[lines[i, 0]][lines[i, 1]], squares[lines[i, 2]][lines[i, 3]], squares[lines[i, 4]][lines[i, 5]] });
+                //if (i == 6)
+                //{
+
+                //}            
+                score += linescore;
             }
             return score;
         }
@@ -137,10 +143,18 @@ namespace TicTacToe
 
             if (countX == 0)
             {
+                //if (countO == 3)
+                //{
+                //    return int.MinValue;
+                //}
                 return (-1) * (int)Math.Pow(10, countO);
             }
             if (countO == 0)
             {
+                //if (countX == 3)
+                //{
+                //    return int.MaxValue;
+                //}
                 return (int)Math.Pow(10, countX);
             }
             return 0;
@@ -162,12 +176,12 @@ namespace TicTacToe
             for (int i = lines.GetLowerBound(0); i <= lines.GetUpperBound(0); i++)
             {
                 score = GetScoreOneLine(new[] { GameBoard.Squares[lines[i, 0]][lines[i, 1]], GameBoard.Squares[lines[i, 2]][lines[i, 3]], GameBoard.Squares[lines[i, 4]][lines[i, 5]] });
-                score /= 1000;
-                if (score == 1)
+
+                if (score == 1000)
                 {
                     return Status.MAX;
                 }
-                if (score == -1)
+                if (score == -1000)
                 {
                     return Status.MIN;
                 }

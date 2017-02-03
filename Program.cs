@@ -10,16 +10,45 @@ namespace TicTacToe
     class Program
     {
         static void Main(string[] args)
-        {
+        {           
+            Console.WriteLine("_______");
+            Console.WriteLine("|1|2|3|");
+            Console.WriteLine("_______");
+            Console.WriteLine("|4|5|6|");
+            Console.WriteLine("_______");
+            Console.WriteLine("|7|8|9|");
+            Console.WriteLine("_______");
+            Console.WriteLine("START GAME!!" + Environment.NewLine + Environment.NewLine);
             GameBoard g = new GameBoard();
 
             Engine e = new Engine();
             e.GameBoard = g;
 
+            bool comFirst = true;
             string startGame = "start";
             while (startGame == "start")
             {
                 e.GameBoard.Init();
+
+                //e.GameBoard.SetMove(2, 0, Cell.MIN);
+                //e.GameBoard.SetMove(2, 1, Cell.MIN);
+                ////e.GameBoard.SetMove(2, 2, Cell.MIN);
+
+                //e.GameBoard.SetMove(0, 0, Cell.MAX);
+                //e.GameBoard.SetMove(1, 1, Cell.MAX);
+                ////e.GameBoard.SetMove(1, 2, Cell.MAX);
+                ////e.GameBoard.SetMove(1, 0, Cell.MAX);
+
+                ////var test = e.Heuristic(e.GameBoard.Squares);
+
+                if (!comFirst)
+                {
+                    Draw(e.GameBoard.Squares);
+                    Console.WriteLine("ENTER cell num");
+                    var num = Convert.ToInt32(Console.ReadLine());
+                    var xy = GetXy(num);
+                    e.GameBoard.SetMove(xy[0], xy[1], Cell.MIN);
+                }
 
                 while (true)
                 {
@@ -32,17 +61,18 @@ namespace TicTacToe
                         break;
                     }
 
-                    Console.WriteLine("ENTER X Y");
-                    var x = Convert.ToInt32(Console.ReadLine());
-                    var y = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine("ENTER cell num");
+                    var num = Convert.ToInt32(Console.ReadLine());
+                    var xy = GetXy(num);
 
-                    e.GameBoard.SetMove(x, y, Cell.MIN);
+                    e.GameBoard.SetMove(xy[0], xy[1], Cell.MIN);
                     if (Check(e.CheckWinner()))
                     {
                         break;
                     }
                 }
 
+                comFirst = !comFirst;
                 Console.WriteLine("Restart GAME !!! (y/n)");
                 if (Console.ReadLine() == "n")
                 {
@@ -103,6 +133,32 @@ namespace TicTacToe
             }
 
             return true;
+        }
+
+        static int[] GetXy(int num)
+        {
+            switch (num)
+            {
+                case 1:
+                    return new int[] { 0, 0 };
+                case 2:
+                    return new int[] { 1, 0 };
+                case 3:
+                    return new int[] { 2, 0 };
+                case 4:
+                    return new int[] { 0, 1 };
+                case 5:
+                    return new int[] { 1, 1 };
+                case 6:
+                    return new int[] { 2, 1 };
+                case 7:
+                    return new int[] { 0, 2 };
+                case 8:
+                    return new int[] { 1, 2 };
+                case 9:
+                    return new int[] { 2, 2 };
+            }
+            return null;
         }
     }
 }
