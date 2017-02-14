@@ -12,14 +12,93 @@ namespace TicTacToe
 
         public int[] FineBestNode()
         {
-            var bestNode = Minimax(3, true);
-            //var bestNode = MinimaxPrunning(3, true, int.MinValue, int.MaxValue);
-
+            //var bestNode = Minimax(2, true);
+            var bestNode = MinimaxPrunning(3, true, int.MinValue, int.MaxValue);
             return new int[] { bestNode.X, bestNode.Y };
         }
 
+        public Status CheckWinner()
+        {
+            int[] winPattern = new int[]
+            {
+                73,  //001001001
+                146, //010010010
+                292, //100100100
+                448, //111000000
+                56,  //000111000
+                7,   //000000111
+                84,  //001010100
+                273  //100010001
+            };
+            var squares = GameBoard.Squares;
+            string valueMax = "";
+            string valueMin = "";
+            for (int i = 0; i < squares.Length; i++)
+            {
+                for (int j = 0; j < squares[i].Length; j++)
+                {
+                    valueMax += "01"[squares[i][j] == Cell.MAX ? 1 : 0];
+                    valueMin += "01"[squares[i][j] == Cell.MIN ? 1 : 0];
+                }
+            }
+
+            for (int i = 0; i < winPattern.Length; i++)
+            {
+                if ((winPattern[i] & Convert.ToInt32(valueMax, 2)) == winPattern[i])
+                {
+                    return Status.MAX;
+                }
+
+                if ((winPattern[i] & Convert.ToInt32(valueMin, 2)) == winPattern[i])
+                {
+                    return Status.MIN;
+                }
+            }
+
+            if (GameBoard.GetOpenCells().Any())
+            {
+                return Status.OPEN;
+            }
+
+            return Status.UNKNOW;
+
+            //int score = 0;
+            //int[,] lines = { { 0, 0, 1 , 0, 2, 0},
+            //               { 0, 1, 1, 1, 2, 1},
+            //               { 0, 2, 1, 2, 2, 2},
+            //               { 0, 0, 0, 1, 0, 2},
+            //               { 1, 0, 1, 1, 1, 2},
+            //               { 2, 0, 2, 1, 2, 2},
+            //               { 0, 0, 1, 1, 2, 2},
+            //               { 0, 2, 1, 1, 2, 0}
+            //               };
+
+            //for (int i = lines.GetLowerBound(0); i <= lines.GetUpperBound(0); i++)
+            //{
+            //    score = GetScoreOneLine(new[] { GameBoard.Squares[lines[i, 0]][lines[i, 1]], GameBoard.Squares[lines[i, 2]][lines[i, 3]], GameBoard.Squares[lines[i, 4]][lines[i, 5]] });
+
+            //    if (score == 1000)
+            //    {
+            //        return Status.MAX;
+            //    }
+            //    if (score == -1000)
+            //    {
+            //        return Status.MIN;
+            //    }
+            //}
+
+            //if (true)
+            //{
+            //    if (GameBoard.GetOpenCells().Any())
+            //    {
+            //        return Status.OPEN;
+            //    }
+            //}
+            //return Status.UNKNOW;
+        }
+
         //1 max, -1 min
-        public Node Minimax(int depth, bool maxPlayer)
+        private Node Minimax(int depth, bool maxPlayer)
         {
             Node bestNode = null;
 
@@ -51,7 +130,7 @@ namespace TicTacToe
             return bestNode;
         }
 
-        public Node MinimaxPrunning(int depth, bool maxPlayer, int alpha, int beta)
+        private Node MinimaxPrunning(int depth, bool maxPlayer, int alpha, int beta)
         {
             Node bestNode = null;
 
@@ -107,21 +186,17 @@ namespace TicTacToe
                            { 0, 0, 1, 1, 2, 2},
                            { 0, 2, 1, 1, 2, 0}
                            };
-
-            for (int i = lines.GetLowerBound(0); i <= lines.GetUpperBound(0); i++)
+            for (int i = 0; i < lines.GetLength(0); i++)
             {
                 var linescore = GetScoreOneLine(new[] { squares[lines[i, 0]][lines[i, 1]], squares[lines[i, 2]][lines[i, 3]], squares[lines[i, 4]][lines[i, 5]] });
-                //if (i == 6)
-                //{
-
-                //}            
                 score += linescore;
             }
+
             return score;
         }
 
         // X=1 MAX, O=-1 MIN
-        public int GetScoreOneLine(Cell[] line)
+        private int GetScoreOneLine(Cell[] line)
         {
             int countX = 0, countO = 0;
             foreach (var value in line)
@@ -143,58 +218,13 @@ namespace TicTacToe
 
             if (countX == 0)
             {
-                //if (countO == 3)
-                //{
-                //    return int.MinValue;
-                //}
                 return (-1) * (int)Math.Pow(10, countO);
             }
             if (countO == 0)
             {
-                //if (countX == 3)
-                //{
-                //    return int.MaxValue;
-                //}
                 return (int)Math.Pow(10, countX);
             }
             return 0;
-        }
-
-        public Status CheckWinner()
-        {
-            int score = 0;
-            int[,] lines = { { 0, 0, 1 , 0, 2, 0},
-                           { 0, 1, 1, 1, 2, 1},
-                           { 0, 2, 1, 2, 2, 2},
-                           { 0, 0, 0, 1, 0, 2},
-                           { 1, 0, 1, 1, 1, 2},
-                           { 2, 0, 2, 1, 2, 2},
-                           { 0, 0, 1, 1, 2, 2},
-                           { 0, 2, 1, 1, 2, 0}
-                           };
-
-            for (int i = lines.GetLowerBound(0); i <= lines.GetUpperBound(0); i++)
-            {
-                score = GetScoreOneLine(new[] { GameBoard.Squares[lines[i, 0]][lines[i, 1]], GameBoard.Squares[lines[i, 2]][lines[i, 3]], GameBoard.Squares[lines[i, 4]][lines[i, 5]] });
-
-                if (score == 1000)
-                {
-                    return Status.MAX;
-                }
-                if (score == -1000)
-                {
-                    return Status.MIN;
-                }
-            }
-
-            if (true)
-            {
-                if (GameBoard.GetOpenCells().Any())
-                {
-                    return Status.OPEN;
-                }
-            }
-            return Status.UNKNOW;
         }
     }
 

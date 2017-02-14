@@ -10,7 +10,10 @@ namespace TicTacToe
     class Program
     {
         static void Main(string[] args)
-        {           
+        {
+            var ddd = Convert.ToInt32("001001001", 2);
+            var ddd2 = Convert.ToInt32("010010010", 2);
+
             Console.WriteLine("_______");
             Console.WriteLine("|1|2|3|");
             Console.WriteLine("_______");
@@ -30,15 +33,17 @@ namespace TicTacToe
             {
                 e.GameBoard.Init();
 
-                //e.GameBoard.SetMove(2, 0, Cell.MIN);
+                //For testing
                 //e.GameBoard.SetMove(2, 1, Cell.MIN);
-                ////e.GameBoard.SetMove(2, 2, Cell.MIN);
+                //e.GameBoard.SetMove(2, 2, Cell.MIN);
+                //e.GameBoard.SetMove(0, 2, Cell.MIN);
+                ////--e.GameBoard.SetMove(0, 1, Cell.MIN);
 
                 //e.GameBoard.SetMove(0, 0, Cell.MAX);
+                //e.GameBoard.SetMove(2, 0, Cell.MAX);
                 //e.GameBoard.SetMove(1, 1, Cell.MAX);
-                ////e.GameBoard.SetMove(1, 2, Cell.MAX);
-                ////e.GameBoard.SetMove(1, 0, Cell.MAX);
-
+                ////--e.GameBoard.SetMove(1, 0, Cell.MAX);
+                ////--e.GameBoard.SetMove(1, 2, Cell.MAX);
                 ////var test = e.Heuristic(e.GameBoard.Squares);
 
                 if (!comFirst)
@@ -54,6 +59,7 @@ namespace TicTacToe
                 {
                     var move = e.FineBestNode();
                     e.GameBoard.SetMove(move[0], move[1], Cell.MAX);
+
                     Draw(e.GameBoard.Squares);
 
                     if (Check(e.CheckWinner()))
@@ -80,26 +86,26 @@ namespace TicTacToe
                 }
             }
 
-            Console.WriteLine("any key to exit.................................");
+            Console.WriteLine("Press any key to exit.................................");
             Console.ReadLine();
         }
 
         static void Draw(Cell[][] squares)
         {
             Console.WriteLine("_______");
-            string line1 = string.Format("|{0}|{1}|{2}|", drawCell(squares[0][0]), drawCell(squares[1][0]), drawCell(squares[2][0]));
+            string line1 = string.Format("|{0}|{1}|{2}|", DrawCell(squares[0][0]), DrawCell(squares[1][0]), DrawCell(squares[2][0]));
             Console.WriteLine("_______");
             Console.WriteLine(line1);
-            string line2 = string.Format("|{0}|{1}|{2}|", drawCell(squares[0][1]), drawCell(squares[1][1]), drawCell(squares[2][1]));
+            string line2 = string.Format("|{0}|{1}|{2}|", DrawCell(squares[0][1]), DrawCell(squares[1][1]), DrawCell(squares[2][1]));
             Console.WriteLine("_______");
             Console.WriteLine(line2);
-            string line3 = string.Format("|{0}|{1}|{2}|", drawCell(squares[0][2]), drawCell(squares[1][2]), drawCell(squares[2][2]));
+            string line3 = string.Format("|{0}|{1}|{2}|", DrawCell(squares[0][2]), DrawCell(squares[1][2]), DrawCell(squares[2][2]));
             Console.WriteLine("_______");
             Console.WriteLine(line3);
             Console.WriteLine("_______");
         }
 
-        static string drawCell(Cell cell)
+        static string DrawCell(Cell cell)
         {
             if (cell == Cell.MAX)
             {
