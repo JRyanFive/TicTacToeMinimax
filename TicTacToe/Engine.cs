@@ -61,46 +61,21 @@ namespace TicTacToe
             }
 
             return Status.UNKNOW;
-
-            //int score = 0;
-            //int[,] lines = { { 0, 0, 1 , 0, 2, 0},
-            //               { 0, 1, 1, 1, 2, 1},
-            //               { 0, 2, 1, 2, 2, 2},
-            //               { 0, 0, 0, 1, 0, 2},
-            //               { 1, 0, 1, 1, 1, 2},
-            //               { 2, 0, 2, 1, 2, 2},
-            //               { 0, 0, 1, 1, 2, 2},
-            //               { 0, 2, 1, 1, 2, 0}
-            //               };
-
-            //for (int i = lines.GetLowerBound(0); i <= lines.GetUpperBound(0); i++)
-            //{
-            //    score = GetScoreOneLine(new[] { GameBoard.Squares[lines[i, 0]][lines[i, 1]], GameBoard.Squares[lines[i, 2]][lines[i, 3]], GameBoard.Squares[lines[i, 4]][lines[i, 5]] });
-
-            //    if (score == 1000)
-            //    {
-            //        return Status.MAX;
-            //    }
-            //    if (score == -1000)
-            //    {
-            //        return Status.MIN;
-            //    }
-            //}
-
-            //if (true)
-            //{
-            //    if (GameBoard.GetOpenCells().Any())
-            //    {
-            //        return Status.OPEN;
-            //    }
-            //}
-            //return Status.UNKNOW;
         }
 
         //1 max, -1 min
         private Node Minimax(int depth, bool maxPlayer)
         {
             Node bestNode = null;
+                        
+            //Check game over or not
+            switch (CheckWinner())
+            {
+                case Status.MAX:            
+                    return new Node { Rank = 1000 };
+                case Status.MIN:
+                    return new Node { Rank = -1000 };
+            }
 
             if (depth == 0 || !GameBoard.GetOpenCells().Any())
             {
@@ -133,6 +108,15 @@ namespace TicTacToe
         private Node MinimaxPrunning(int depth, bool maxPlayer, int alpha, int beta)
         {
             Node bestNode = null;
+
+            //Check game over or not
+            switch (CheckWinner())
+            {
+                case Status.MAX:
+                    return new Node { Rank = 1000 };
+                case Status.MIN:
+                    return new Node { Rank = -1000 };
+            }
 
             if (depth == 0 || !GameBoard.GetOpenCells().Any())
             {
@@ -174,7 +158,7 @@ namespace TicTacToe
             return bestNode;
         }
 
-        public int Heuristic(Cell[][] squares)
+        private int Heuristic(Cell[][] squares)
         {
             int score = 0;
             int[,] lines = { { 0, 0, 1 , 0, 2, 0},

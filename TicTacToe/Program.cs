@@ -11,9 +11,6 @@ namespace TicTacToe
     {
         static void Main(string[] args)
         {
-            var ddd = Convert.ToInt32("001001001", 2);
-            var ddd2 = Convert.ToInt32("010010010", 2);
-
             Console.WriteLine("_______");
             Console.WriteLine("|1|2|3|");
             Console.WriteLine("_______");
@@ -32,19 +29,6 @@ namespace TicTacToe
             while (startGame == "start")
             {
                 e.GameBoard.Init();
-
-                //For testing
-                //e.GameBoard.SetMove(2, 1, Cell.MIN);
-                //e.GameBoard.SetMove(2, 2, Cell.MIN);
-                //e.GameBoard.SetMove(0, 2, Cell.MIN);
-                ////--e.GameBoard.SetMove(0, 1, Cell.MIN);
-
-                //e.GameBoard.SetMove(0, 0, Cell.MAX);
-                //e.GameBoard.SetMove(2, 0, Cell.MAX);
-                //e.GameBoard.SetMove(1, 1, Cell.MAX);
-                ////--e.GameBoard.SetMove(1, 0, Cell.MAX);
-                ////--e.GameBoard.SetMove(1, 2, Cell.MAX);
-                ////var test = e.Heuristic(e.GameBoard.Squares);
 
                 if (!comFirst)
                 {
